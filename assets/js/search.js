@@ -121,7 +121,17 @@
       if (running == 0) {
         var perf = ((performance.now() - e.data.qt) / 1000).toFixed(2);
         if (perf == "0.00") perf = "<0.01";
-        searchResults.innerHTML = '<li style="margin-bottom:0;text-align:right;">' + e.data.count + ' results (' + perf + ' seconds)</li>' + e.data.html;
+        // Check if the search query matches the regex ".*sutta"
+        var regex = /.*sutta/;
+        var isSuttaSearch = regex.test(this.q);
+
+        if (e.data.count === 0 && isSuttaSearch) {
+          // Display custom message for sutta search with no results
+          searchResults.innerHTML = '<li class="no-results">If you are searching for suttas, please consult the sutta search tool.</li>';
+        } else {
+          // Display regular search results
+          searchResults.innerHTML = '<li style="margin-bottom:0;text-align:right;">' + e.data.count + ' results (' + perf + ' seconds)</li>' + e.data.html;
+        }
         loadingIndicator.style.display = 'none';
         stillLoading.style.display = 'none';
         searchResults.onclick = maybeRegisterNavigation.bind(e.data);
